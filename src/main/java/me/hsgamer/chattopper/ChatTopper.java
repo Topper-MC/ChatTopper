@@ -1,17 +1,21 @@
 package me.hsgamer.chattopper;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import io.github.projectunified.minelib.plugin.base.BasePlugin;
+import me.hsgamer.chattopper.config.MainConfig;
+import me.hsgamer.chattopper.manager.StorageManager;
+import me.hsgamer.hscore.bukkit.config.BukkitConfig;
+import me.hsgamer.hscore.config.proxy.ConfigGenerator;
 
-public final class ChatTopper extends JavaPlugin {
+import java.util.Arrays;
+import java.util.List;
 
+public final class ChatTopper extends BasePlugin {
     @Override
-    public void onEnable() {
-        // Plugin startup logic
+    protected List<Object> getComponents() {
+        return Arrays.asList(
+                ConfigGenerator.newInstance(MainConfig.class, new BukkitConfig(this)),
 
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+                new StorageManager(this)
+        );
     }
 }
