@@ -3,8 +3,11 @@ package me.hsgamer.chattopper.holder.agent;
 import me.hsgamer.chattopper.holder.WordHolder;
 import me.hsgamer.topper.agent.core.Agent;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class UpdateAgent implements Agent, Runnable {
     private final WordHolder holder;
@@ -14,8 +17,11 @@ public class UpdateAgent implements Agent, Runnable {
         this.holder = holder;
     }
 
-    private static String[] split(String chat) {
-        return chat.split("\\s+");
+    private static List<String> split(String chat) {
+        return Arrays.stream(chat.split("\\s+"))
+                .map(word -> word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase())
+                .filter(word -> !word.isEmpty())
+                .collect(Collectors.toList());
     }
 
     public void addChat(String chat) {
@@ -30,8 +36,7 @@ public class UpdateAgent implements Agent, Runnable {
                 break;
             }
 
-            String[] split = split(chat);
-            for (String word : split) {
+            for (String word : split(chat)) {
                 holder.getOrCreateEntry(word).setValue(value -> value + 1);
             }
         }
