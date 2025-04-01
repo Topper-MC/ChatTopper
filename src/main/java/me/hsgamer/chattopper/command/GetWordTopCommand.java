@@ -27,7 +27,7 @@ public class GetWordTopCommand extends Command {
             return false;
         }
 
-        int from = 0;
+        int from = 1;
         int to = 10;
         if (args.length > 0) {
             try {
@@ -47,7 +47,7 @@ public class GetWordTopCommand extends Command {
             }
         }
 
-        if (from >= to) {
+        if (from > to) {
             sender.sendMessage("Invalid range");
             return false;
         }
@@ -55,15 +55,16 @@ public class GetWordTopCommand extends Command {
         SnapshotAgent<String, Long> agent = plugin.get(HolderManager.class).getHolder().getSnapshotAgent();
         List<Map.Entry<String, Long>> topWords = agent.getSnapshot();
 
-        for (int i = from; i < to; i++) {
+        for (int i = from; i <= to; i++) {
+            int index = i - 1;
             Map.Entry<String, Long> entry = null;
-            if (i >= 0 && i < topWords.size()) {
-                entry = topWords.get(i);
+            if (index >= 0 && index < topWords.size()) {
+                entry = topWords.get(index);
             }
             if (entry == null) {
-                sender.sendMessage((i + 1) + ": No data");
+                sender.sendMessage(i + ": No data");
             } else {
-                sender.sendMessage((i + 1) + ": " + entry.getKey() + " - " + entry.getValue());
+                sender.sendMessage(i + ": " + entry.getKey() + " - " + entry.getValue());
             }
         }
 
