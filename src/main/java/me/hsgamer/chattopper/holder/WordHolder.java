@@ -7,6 +7,7 @@ import me.hsgamer.chattopper.manager.StorageManager;
 import me.hsgamer.topper.agent.holder.AgentDataHolder;
 import me.hsgamer.topper.agent.snapshot.SnapshotAgent;
 import me.hsgamer.topper.agent.storage.StorageAgent;
+import me.hsgamer.topper.core.DataEntry;
 import me.hsgamer.topper.query.simple.SimpleQueryDisplay;
 import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.storage.core.DataStorage;
@@ -40,7 +41,12 @@ public class WordHolder extends AgentDataHolder<String, Long> {
         };
 
         DataStorage<String, Long> dataStorage = plugin.get(StorageManager.class).buildStorage(getName());
-        StorageAgent<String, Long> storageAgent = new StorageAgent<>(this, dataStorage);
+        StorageAgent<String, Long> storageAgent = new StorageAgent<String, Long>(this, dataStorage) {
+            @Override
+            public void onUpdate(DataEntry<String, Long> entry, Long oldValue, Long newValue) {
+                scheduleValue(entry.getKey(), newValue);
+            }
+        };
         addAgent(storageAgent);
         addEntryAgent(storageAgent);
         addAgent(new SpigotRunnableAgent(storageAgent, AsyncScheduler.get(plugin), 20L));
