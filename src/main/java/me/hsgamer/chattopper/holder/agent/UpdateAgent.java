@@ -19,7 +19,7 @@ public class UpdateAgent implements Agent, Runnable {
 
     private static List<String> split(String chat) {
         return Arrays.stream(chat.split("\\s+"))
-                .map(word -> word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase())
+                .map(word -> word.replaceAll("\\W", "").toLowerCase())
                 .filter(word -> !word.isEmpty())
                 .collect(Collectors.toList());
     }
@@ -30,15 +30,13 @@ public class UpdateAgent implements Agent, Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            String chat = queue.poll();
-            if (chat == null) {
-                break;
-            }
+        String chat = queue.poll();
+        if (chat == null) {
+            return;
+        }
 
-            for (String word : split(chat)) {
-                holder.getOrCreateEntry(word).setValue(value -> value + 1);
-            }
+        for (String word : split(chat)) {
+            holder.getOrCreateEntry(word).setValue(value -> value + 1);
         }
     }
 }
