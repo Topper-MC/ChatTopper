@@ -1,0 +1,4 @@
+name: ChatTopper
+version: '${project.version}'
+main: me.hsgamer.chattopper.ChatTopper
+api-version: '1.13'
